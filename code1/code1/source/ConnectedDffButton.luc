@@ -1,0 +1,59 @@
+module connectedDffButton (
+    input clk,  // clock
+    input rst,  // reset
+    input s0,
+    input s1,
+    input s2,
+    input s3,
+    output onClick,
+    output clu_out[2]
+  ) {
+  const XOR = 4b1000;
+  const NAND = 4b0100;
+  const NOT = 4b0010;
+  const XNOR = 4b0001;
+  sig inp;
+  .clk(clk) {
+    .rst(rst) {
+      dff check[4];
+    }
+  }
+  
+  always {
+    if(rst) {
+      check.d = c{1,0,0,0};
+    }
+    inp = c{s0,s1,s2,s3};
+    if (inp == XOR) {
+      onClick = 1;
+      check.d = inp;
+      clu_out = 2b00;
+    } else if (inp == NAND) {
+      onClick = 1;
+      check.d = inp;
+      clu_out = 2b01;
+    } else if (inp == NOT) {
+      onClick = 1;
+      check.d = inp;
+      clu_out = 2b10;
+    } else if (inp == XNOR) {
+      onClick = 1;
+      check.d = inp;
+      clu_out = 2b11;
+    } else {
+      onClick = 0;
+      if (check.q == XOR) {
+        clu_out = 2b00;
+      } else if (check.q == NAND) {
+        clu_out = 2b01;
+      } else if (check.q == NOT){
+        clu_out = 2b10;
+      } else if (check.q == XNOR) {
+        clu_out = 2b11;
+      } else {
+        clu_out =2b00;
+      }
+    }
+    
+  }
+}

@@ -1,0 +1,210 @@
+module mojo_top (
+    input clk,              
+    input rst_n,            
+    input button0,
+    input button1,
+    input button2,         
+    input button3,
+    input button4,  
+    input button5,
+    input button6,  
+    input button7,
+    input button8,  
+    input button9,
+    input button10,  
+    input button11,
+    input button12,  
+    input button13,
+    input button14,  
+    input button15,
+    input buttonS0,
+    input buttonS1,
+    input buttonS2,
+    input buttonS3,
+    output led0,
+    output led1,
+    output led2,
+    output led3,
+    output led4,
+    output led5,
+    output led6,
+    output led7,
+    output led8,
+    output led9,
+    output led10,
+    output led11,
+    output led12,
+    output led13,
+    output led14,
+    output led15
+  ) {
+
+  sig rst;
+  sig button_in [16];
+  clu control_logic;
+ 
+  
+  .clk(clk) {
+    reset_conditioner reset_cond;
+    
+    .rst(rst){
+      button bb0;
+      button bb1;
+      button bb2;
+      button bb3;
+      button bb4;
+      button bb5;
+      button bb6;
+      button bb7;
+      button bb8;
+      button bb9;
+      button bb10;
+      button bb11;
+      button bb12;
+      button bb13;
+      button bb14;
+      button bb15;
+      button bbs0;
+      button bbs1;
+      button bbs2;
+      button bbs3;
+      connectedDffButton selector;
+      alumod alu;
+      dff matrix[16];
+      fsm state = {RESET, NEWPRESET, INGAME, WIN};
+    }
+    
+    
+  }
+  
+  
+
+  
+  
+  always {
+    
+    reset_cond.in = ~rst_n; 
+    rst = reset_cond.out;   
+    
+    if (rst) {
+     state.d = state.RESET;
+    }
+    
+
+    bb0.button = button0;
+    bb1.button = button1;
+    bb2.button = button2;
+    bb3.button = button3;
+    bb4.button = button4;
+    bb5.button = button5;
+    bb6.button = button6;
+    bb7.button = button7;
+    bb8.button = button8;
+    bb9.button = button9;
+    bb10.button = button10;
+    bb11.button = button11;
+    bb12.button = button12;
+    bb13.button = button13;
+    bb14.button = button14;
+    bb15.button = button15;
+    bbs0.button = buttonS0;
+    bbs1.button = buttonS1;
+    bbs2.button = buttonS2;
+    bbs3.button = buttonS3;
+    led0 = matrix.q[0];
+    led1 = matrix.q[1];
+    led2 = matrix.q[2];
+    led3 = matrix.q[3];
+    led4 = matrix.q[4];
+    led5 = matrix.q[5];
+    led6 = matrix.q[6];
+    led7 = matrix.q[7];
+    led8 = matrix.q[8];
+    led9 = matrix.q[9];
+    led10 = matrix.q[10];
+    led11 = matrix.q[11];
+    led12 = matrix.q[12];
+    led13 = matrix.q[13];
+    led14 = matrix.q[14];
+    led15 = matrix.q[15];
+    
+    button_in = c{bb15.val,bb14.val,bb13.val,bb12.val,bb11.val,bb10.val,bb9.val,bb8.val,bb7.val,bb6.val,bb5.val,bb4.val,bb3.val,bb2.val,bb1.val,bb0.val};
+    
+    selector.s0 = bbs0.val;
+    selector.s1 = bbs1.val;
+    selector.s2 = bbs2.val;
+    selector.s3 = bbs3.val;
+    case (state.q) {
+      state.INGAME:
+        control_logic.alu_in = selector.clu_out; // selector, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0
+        control_logic.clu_in = button_in;
+        if (selector.onClick) {
+          state.d = state.NEWPRESET;
+        }
+        if(matrix.q == 16b1111111111111111){
+          state.d=state.WIN;
+        }
+        alu.inne[0] = c{2b0,control_logic.alufn};
+       
+        case (control_logic.numA){
+          2:
+            alu.inne[1] = c{6b0, matrix.q[control_logic.loc_a[0]], matrix.q[control_logic.loc_a[1]]};
+            alu.inne[2] = c{6b0, matrix.q[control_logic.loc_b],matrix.q[control_logic.loc_b]};
+            matrix.d[control_logic.loc_a[0]] = alu.out[1];
+            matrix.d[control_logic.loc_a[1]] = alu.out[0];
+          3:
+            alu.inne[1] = c{5b0,matrix.q[control_logic.loc_a[0]],  matrix.q[control_logic.loc_a[1]], matrix.q[control_logic.loc_a[2]]};
+            alu.inne[2] = c{5b0,matrix.q[control_logic.loc_b], matrix.q[control_logic.loc_b],matrix.q[control_logic.loc_b]};
+            matrix.d[control_logic.loc_a[0]] = alu.out[2];
+            matrix.d[control_logic.loc_a[1]] = alu.out[1];
+            matrix.d[control_logic.loc_a[2]] = alu.out[0];
+          4:
+            alu.inne[1] = c{4b0,matrix.q[control_logic.loc_a[0]],matrix.q[control_logic.loc_a[1]],  matrix.q[control_logic.loc_a[2]], matrix.q[control_logic.loc_a[3]]};
+            alu.inne[2] = c{4b0,matrix.q[control_logic.loc_b],matrix.q[control_logic.loc_b], matrix.q[control_logic.loc_b],matrix.q[control_logic.loc_b]};
+            matrix.d[control_logic.loc_a[0]] = alu.out[3];
+            matrix.d[control_logic.loc_a[1]] = alu.out[2];
+            matrix.d[control_logic.loc_a[2]] = alu.out[1];
+            matrix.d[control_logic.loc_a[3]] = alu.out[0];
+        }
+      state.RESET:
+        matrix.d = 16b0010011100110100;
+        control_logic.alu_in = selector.clu_out; // selector, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0
+        control_logic.clu_in = button_in;
+        alu.inne[0] = 00000000;
+        alu.inne[1] = 00000000;
+        alu.inne[2] = 00000000;
+        state.d = state.INGAME;
+      state.NEWPRESET:
+        matrix.d = 16b0010011100110100;
+        control_logic.alu_in = selector.clu_out; // selector, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0
+        control_logic.clu_in = button_in;
+        alu.inne[0] = 00000000;
+        alu.inne[1] = 00000000;
+        alu.inne[2] = 00000000;
+        state.d  = state.INGAME;
+        
+      state.WIN:
+        control_logic.alu_in = selector.clu_out; // selector, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0
+        control_logic.clu_in = button_in;
+        alu.inne[0] = 00000000;
+        alu.inne[1] = 00000000;
+        alu.inne[2] = 00000000;
+        matrix.d = 16b1111111111111111;
+      default:
+        control_logic.alu_in = selector.clu_out; // selector, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0
+        control_logic.clu_in = button_in;
+        alu.inne[0] = 00000000;
+        alu.inne[1] = 00000000;
+        alu.inne[2] = 00000000;
+     
+    }
+    
+  }
+  
+  
+  
+  
+}
+
+
+

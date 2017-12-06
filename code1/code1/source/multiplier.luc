@@ -1,0 +1,10 @@
+module multiplier (
+    input in[3][8],
+    output answer[8]
+  ) {
+
+  always {
+    answer = in[1] * in[0];
+    
+  }
+}

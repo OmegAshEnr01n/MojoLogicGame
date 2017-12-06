@@ -1,0 +1,8 @@
+INTSTYLE=pa
+INFILE=D:\lol\SUTD\Term 4\50.001\1D\code1\code1\work\planAhead\code1\code1.runs\impl_1\mojo_top_0_routed.ncd
+OUTFILE=D:\lol\SUTD\Term 4\50.001\1D\code1\code1\work\planAhead\code1\code1.runs\impl_1\mojo_top_0.bit
+FAMILY=Spartan6
+PART=xc6slx9-2tqg144
+WORKINGDIR=D:\lol\SUTD\Term 4\50.001\1D\code1\code1\work\planAhead\code1\code1.runs\impl_1
+LICENSE=WebPack
+USER_INFO=211420202_0_0_677

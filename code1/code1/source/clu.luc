@@ -1,0 +1,130 @@
+
+// clu needs to out put the alufn, locations of a, locations of b
+module clu (
+    input clu_in[16],
+    input alu_in[2],
+    output alufn[6],
+    output loc_a[4],
+    output loc_b,
+    output numA
+  ) {
+
+  always {
+    case (clu_in) {
+      16b0000000000000001:
+        loc_a[0] = 1;
+        loc_a[1] = 4;
+        numA = 2;
+        loc_b = 0;
+      16b0000000000000010:
+        loc_a[0] = 0;
+        loc_a[1] = 2;
+        loc_a[2] = 5;
+        numA = 3;
+        loc_b = 1;
+      16b0000000000000100:
+        loc_a[0] = 1;
+        loc_a[1] = 3;
+        loc_a[2] = 6;
+        numA = 3;
+        loc_b = 2;
+      16b0000000000001000:
+        loc_a[0] = 2;
+        loc_a[1] = 7;
+        numA = 2;
+        loc_b = 3;
+        
+      16b0000000000010000:
+        loc_a[0] = 0;
+        loc_a[1] = 5;
+        loc_a[2] = 8;
+        numA = 3;
+        loc_b = 4;
+      16b0000000000100000:
+        loc_a[0] = 1;
+        loc_a[1] = 4;
+        loc_a[2] = 6;
+        loc_a[3] = 9;
+        numA = 4;
+        loc_b = 5;
+      16b0000000001000000:
+        loc_a[0] = 2;
+        loc_a[1] = 5;
+        loc_a[2] = 7;
+        loc_a[3] = 10;
+        numA = 4;
+        loc_b = 6;
+      16b0000000010000000:
+        loc_a[0] = 3;
+        loc_a[1] = 6;
+        loc_a[2] = 11;
+        numA = 3;
+        loc_b = 7;
+        
+      16b0000000100000000:
+        loc_a[0] = 4;
+        loc_a[1] = 9;
+        loc_a[2] = 12;
+        numA = 3;
+        loc_b = 8;
+      16b0000001000000000:
+        loc_a[0] = 5;
+        loc_a[1] = 8;
+        loc_a[2] = 10;
+        loc_a[3] = 13;
+        numA = 4;
+        loc_b = 9;
+      16b0000010000000000:
+        loc_a[0] = 6;
+        loc_a[1] = 9;
+        loc_a[2] = 11;
+        loc_a[3] = 14;
+        numA = 4;
+        loc_b = 10;
+      16b0000100000000000:
+        loc_a[0] = 7;
+        loc_a[1] = 10;
+        loc_a[2] = 15;
+        numA = 3;
+        loc_b = 11;
+        
+      16b0001000000000000:
+        loc_a[0] = 8;
+        loc_a[1] = 13;
+        numA = 2;
+        loc_b = 12;
+      16b0010000000000000:
+        loc_a[0] = 9;
+        loc_a[1] = 12;
+        loc_a[2] = 14;
+        numA = 3;
+        loc_b = 13;
+      16b0100000000000000:
+        loc_a[0] = 10;
+        loc_a[1] = 13;
+        loc_a[2] = 15;
+        numA = 3;
+        loc_b = 14;
+      16b1000000000000000:
+        loc_a[0] = 11;
+        loc_a[1] = 14;
+        numA = 2;
+        loc_b = 15;
+      default:
+        loc_a[0] = 0;
+        loc_a[1] = 0;
+        loc_a[2] = 0;
+        loc_a[3] = 0;
+        numA = 0;
+        loc_b = 0;
+    } // 0000000000000000
+    // 0000 0000 0000 0000:
+    case (alu_in) {
+      2b00: alufn = 6b010110;
+      2b01: alufn = 6b010111;
+      2b10: alufn = 6b011111;
+      2b11: alufn = 6b011001;
+      default: alufn = 6b000000;
+    }
+  }
+}
